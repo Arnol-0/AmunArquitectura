@@ -90,6 +90,7 @@ function App() {
   const [flippedCards, setFlippedCards] = useState({});
   const [selectedAnalysis, setSelectedAnalysis] = useState([]);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isAboutExpanded, setIsAboutExpanded] = useState(false);
 
   const toggleFlip = (id) => {
     setFlippedCards(prev => ({
@@ -142,7 +143,7 @@ function App() {
       }
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [activeView]);
+  }, [activeView, showAllServices]);
 
   return (
     <>
@@ -211,31 +212,43 @@ function App() {
             {/* Philosophy / Sobre Nosotros */}
             <section className="philosophy" id="quienes-somos">
               <div className="philosophy-image-wrapper animate-on-scroll">
-                <img src="/adobe_texture_shadow_1776384444276.png" alt="Textura de Adobe" className="philosophy-image" />
+                <img src="/modern_architecture_about.png" alt="Diseño Arquitectónico Moderno" className="philosophy-image" />
+                <div className="philosophy-stats-overlay">
+                  <div className="stat-box">
+                    <span className="stat-number">9+</span>
+                    <span className="stat-label">COMUNAS DE PRESENCIA</span>
+                  </div>
+                  <div className="stat-box">
+                    <span className="stat-number">100%</span>
+                    <span className="stat-label">DIAGNÓSTICO PREVIO</span>
+                  </div>
+                </div>
               </div>
               
               <div className="philosophy-text-content animate-on-scroll delay-200">
                 <span className="philosophy-eyebrow">SOBRE NOSOTROS</span>
                 <h2 className="philosophy-title">Transformamos la complejidad normativa en decisiones claras.</h2>
-                <p className="philosophy-desc hide-on-mobile">
-                  Amun Arquitectura es una consultora técnica especializada en normativa urbanística y tramitación de proyectos de edificación ante Direcciones de Obras Municipales.
-                </p>
-                <p className="philosophy-desc hide-on-mobile">
-                  Su fundadora, arquitecta con experiencia en el sector municipal, conoce desde dentro cómo se revisan los proyectos y por qué se generan rechazos. A partir de esa experiencia, Amun nace con un enfoque claro: transformar un sistema complejo, a veces poco transparente y frustrante, en un proceso comprensible, ordenado y abordable para las personas.
-                </p>
-                <p className="philosophy-desc hide-on-mobile">
-                  Hoy trabajamos con particulares, emprendedores, arquitectos y constructoras, acompañando proyectos desde su evaluación inicial hasta su tramitación.
-                </p>
                 
-                <div className="philosophy-stats">
-                  <div>
-                    <span className="stat-number">9</span>
-                    <span className="stat-label">COMUNAS DE PRESENCIA</span>
+                <div className="philosophy-body">
+                  <p className="philosophy-desc">
+                    Amun Arquitectura es una consultora técnica especializada en normativa urbanística y tramitación de proyectos de edificación ante Direcciones de Obras Municipales.
+                  </p>
+                  
+                  <div className={`philosophy-extended ${isAboutExpanded ? 'expanded' : ''}`}>
+                    <p className="philosophy-desc">
+                      Su fundadora, arquitecta con experiencia en el sector municipal, conoce desde dentro cómo se revisan los proyectos y por qué se generan rechazos. A partir de esa experiencia, Amun nace con un enfoque claro: transformar un sistema complejo, a veces poco transparente y frustrante, en un proceso comprensible, ordenado y abordable para las personas.
+                    </p>
+                    <p className="philosophy-desc">
+                      Hoy trabajamos con particulares, emprendedores, arquitectos y constructoras, acompañando proyectos desde su evaluación inicial hasta su tramitación.
+                    </p>
                   </div>
-                  <div>
-                    <span className="stat-number">100%</span>
-                    <span className="stat-label">DIAGNÓSTICO PREVIO</span>
-                  </div>
+                  
+                  <button 
+                    className="btn-read-more" 
+                    onClick={() => setIsAboutExpanded(!isAboutExpanded)}
+                  >
+                    {isAboutExpanded ? 'Leer menos ↑' : 'Leer más ↓'}
+                  </button>
                 </div>
               </div>
             </section>
@@ -267,9 +280,9 @@ function App() {
                 </div>
                 
                 <div className="services-grid">
-                  {(showAllServices ? servicesData : (typeof window !== 'undefined' && window.innerWidth <= 900 ? servicesData.slice(0, 3) : servicesData)).map((service, index) => (
+                  {servicesData.map((service, index) => (
                     <div 
-                      className={`service-card animate-on-scroll delay-${index * 100}`} 
+                      className={`service-card animate-on-scroll delay-${index * 100} ${!showAllServices && index >= 3 ? 'mobile-hidden-service' : ''}`} 
                       key={service.id}
                       onClick={() => toggleFlip(service.id)}
                       onMouseEnter={() => setFlippedCards(prev => ({...prev, [service.id]: true}))}
@@ -312,7 +325,6 @@ function App() {
                   <button 
                     onClick={() => setShowAllServices(!showAllServices)} 
                     className="btn-outline-white-solid" 
-                    style={{ display: typeof window !== 'undefined' && window.innerWidth > 900 ? 'none' : 'inline-flex' }}
                   >
                     {showAllServices ? 'VER MENOS SERVICIOS' : 'VER TODOS LOS SERVICIOS'}
                   </button>
@@ -362,33 +374,60 @@ function App() {
 
             {/* Agenda tu diagnóstico / Es para ti */}
             <section className="diagnostico-section animate-on-scroll" id="diagnostico">
-              <div className="diagnostico-grid">
-                <div className="diagnostico-info">
-                  <div className="section-header" style={{ alignItems: 'flex-start', textAlign: 'left', marginBottom: '2rem' }}>
-                    <h2 className="section-title" style={{ marginBottom: '1rem' }}>AGENDA TU DIAGNÓSTICO NORMATIVO</h2>
-                    <div className="section-title-line" style={{ margin: '0' }}></div>
+              <div className="diagnostico-container">
+                <div className="diagnostico-header">
+                  <h2 className="section-title">DIAGNÓSTICO NORMATIVO</h2>
+                  <div className="section-title-line"></div>
+                  <p className="diagnostico-subtitle">El primer paso obligatorio para trabajar juntos.</p>
+                  <p className="diagnostico-desc">
+                    Analizamos tu caso y trazamos el camino legal y técnico exacto para que tomes decisiones seguras y evites errores costosos.
+                  </p>
+                </div>
+                
+                <div className="diagnostico-cards">
+                  <div className="diagnostico-card glow-card">
+                    <div className="card-icon">
+                      <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="var(--color-primary)"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    </div>
+                    <h4>Inversión</h4>
+                    <div className="price-item">
+                      <span>Viviendas</span>
+                      <strong>$50.000 <small>+IVA</small></strong>
+                    </div>
+                    <div className="price-item">
+                      <span>Locales</span>
+                      <strong>$60.000 <small>+IVA</small></strong>
+                    </div>
+                    <div className="card-footer">
+                      ⏱️ 1 hora online • 💳 50% reserva / 50% reunión
+                    </div>
                   </div>
-                  <p className="subtitle">"Este es el primer paso obligatorio para trabajar juntos."</p>
-                  <p>En esta asesoría analizamos tu caso y te entregamos una visión clara, realista y aplicable, para que tomes decisiones informadas y evites errores costosos.</p>
-                  
-                  <div className="diagnostico-details">
-                    <div className="detail-box">
-                      <h4>Valores (Reunión online 1hr)</h4>
-                      <ul>
-                        <li><strong>$50.000 + IVA</strong> (Viviendas)</li>
-                        <li><strong>$60.000 + IVA</strong> (Locales comerciales)</li>
-                        <li><em>50% reserva / 50% día de reunión</em></li>
-                      </ul>
+
+                  <div className="diagnostico-card match-card">
+                    <div className="card-icon">
+                      <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="var(--color-primary)"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                     </div>
-                    <div className="detail-box match-box">
-                      <h4>¿Es para ti?</h4>
-                      <ul className="check-list">
-                        <li>✔️ Si necesitas claridad antes de construir</li>
-                        <li>✔️ Si quieres evitar errores y pérdidas</li>
-                        <li>❌ Si buscas soluciones fuera de norma</li>
-                        <li>❌ Si no estás dispuesto a invertir en asesoría profesional</li>
-                      </ul>
-                    </div>
+                    <h4>¿Es para ti?</h4>
+                    <ul className="modern-checklist">
+                      <li className="positive">
+                        <span className="check">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        </span> 
+                        Buscas claridad antes de construir
+                      </li>
+                      <li className="positive">
+                        <span className="check">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        </span> 
+                        Quieres evitar multas y pérdidas
+                      </li>
+                      <li className="negative">
+                        <span className="cross">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        </span> 
+                        Buscas evadir la norma o atajos ilegales
+                      </li>
+                    </ul>
                   </div>
                 </div>
               </div>
