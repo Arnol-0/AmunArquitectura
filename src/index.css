@@ -1,14 +1,19 @@
 :root {
   --color-bg: #0a0a0a;
+  --color-surface: #1a1a1a;
   --color-primary: #f2aebf; /* Pastel Pink */
   --color-text-main: #ffffff;
   --color-text-muted: #a0a0a0;
   --color-white: #ffffff;
+  --color-black: #000000;
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-navbar-bg: rgba(0, 0, 0, 0.9);
   
   --font-heading: 'Playfair Display', serif;
   --font-body: 'Inter', sans-serif;
   --font-quote: 'Lora', serif;
 }
+
 
 * {
   margin: 0;
